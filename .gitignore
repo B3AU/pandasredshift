@@ -6,3 +6,5 @@ build/
 Pipfile
 Pipfile.lock
 requirements.txt
+.ipynb_checkpoints/
+*Icon?*
