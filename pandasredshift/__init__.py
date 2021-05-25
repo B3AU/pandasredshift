@@ -1,1 +1,1 @@
-from pandas_redshift.core import *
+from pandasredshift.core import *
