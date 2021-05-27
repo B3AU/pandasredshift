@@ -16,3 +16,7 @@ agawronski - A fix for the issue raised by alexisrosuel. Making the script prope
 
 This release contains the following:
 dfernan - The ability to append to an existing table rather only overwrite.
+
+## v 1.2.0
+
+Forked. More simple API. Uses contextmanager to manage the connection state to s3 and redshift. 

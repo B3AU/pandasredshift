@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='pandas_redshift',
-    packages=['pandas_redshift'],
-    version='2.0.5',
-    description='Load data from redshift into a pandas DataFrame and vice versa.',
-    author='Aidan Gawronski',
-    author_email='aidangawronski@gmail.com',
-    # url = 'https://github.com/agawronski/pandas_redshift',
+    name='redpanda',
+    packages=['redpanda'],
+    version='3.0.0',
+    description='Load data from redshift into a pandas DataFrame and vice versa. Forked from pandas_redshift by agawronski',
+    author='Beau Piccart',
+    author_email='beau.piccart@gmail.com',
+    url = 'https://github.com/b3au/redpanda',
     python_requires='>=3',
     install_requires=['psycopg2-binary',
                       'pandas',

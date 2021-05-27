@@ -1,1 +1,1 @@
-include pandas_redshift/redshift_reserve_words.txt
+include redpanda/redshift_reserve_words.txt

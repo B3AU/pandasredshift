@@ -49,7 +49,7 @@ def mask_aws_credentials(s):
 ##############
 from dataclasses import dataclass,asdict
 @dataclass
-class redshiftconfig:
+class RedshiftConfig:
     database: str
     schema: str 
     host: str
@@ -58,7 +58,7 @@ class redshiftconfig:
     port: int = 5439
 
 @dataclass
-class s3config:
+class S3Config:
     access_key: str
     secret_access_key: str 
     bucket: str
@@ -66,7 +66,7 @@ class s3config:
     iam_role: str = None
     token: str = None
 
-class PandasRedshift:
+class RedPanda:
     def __init__(self,redshiftconfig,s3config=None):
         self.redshiftconf = redshiftconfig
         self.s3conf = s3config
@@ -96,7 +96,7 @@ class PandasRedshift:
                             aws_secret_access_key=self.s3conf.secret_access_key,
                             **kwargs)
 
-    def redshift_to_pandas(self,sql_query, query_params=None):
+    def query(self,sql_query, query_params=None):
         # pass a sql query and return a pandas dataframe
         self.cursor.execute(sql_query, query_params)
         columns_list = [desc[0] for desc in self.cursor.description]
@@ -278,12 +278,13 @@ class PandasRedshift:
             self.connect.rollback()
             raise
 
-    def table_exists(table):
+    def exists(self,table):
         query = (f"SELECT EXISTS ("
                  f"SELECT * FROM information_schema.tables "
                  f"WHERE  table_schema = '{self.redshiftconf.schema}'"
                  f"AND    table_name   = '{table.lower()}');")
-        return self.cursor.execute(query).all()[0][0]
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][0]
 
     def pandas_to_redshift(self,
                            data_frame,
@@ -323,6 +324,12 @@ class PandasRedshift:
         # CREATE THE COPY STATEMENT TO SEND FROM S3 TO THE TABLE IN REDSHIFT
         self.s3_to_redshift(redshift_table_name, csv_name, delimiter, quotechar,
                        dateformat, timeformat, region, parameters, verbose=verbose)
+        
+    def put(self,df,table,append=False):
+        self.pandas_to_redshift(df,self.redshiftconf.schema+'.'+table,append=append)
+        
+    def load(self,table):
+        return self.query(f'select * from {self.redshiftconf.schema}.{table}')
         
     def close(self):
         self.cursor.close()
